@@ -34,6 +34,9 @@ namespace TimeSlasher
 
         public bool Cut(Fruit fruit, Vector3 point, Vector3 normal, Blade blade)
         {
+            // 0. 설정창으로 멈춘 동안은 칼이 지나가도 안 베임
+            if (GameManager.Instance.IsPaused) return false;
+
             // 1. 벨 수 있는 상태인지 (방금 베였거나, 너무 많이 잘렸거나, 너무 작으면 안 베임)
             if (fruit.CanBeCut() == false) return false;
             if (fruit.CutCount >= maxCutCount) return false;

@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace TimeSlasher
 {
-    // 콜라이더는 SphereCollider 또는 MeshCollider(Convex) 중 프리팹에 붙은 것을 씀
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class Fruit : MonoBehaviour, IObjectPoolItem

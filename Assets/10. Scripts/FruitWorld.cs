@@ -13,6 +13,9 @@ namespace TimeSlasher
 
         public Transform Root => root;
 
+        // 과일 세계 기본 빠르기 (FruitSpawner가 난이도에 따라 정함. 1 = 원래 물리 속도)
+        public float Speed { get; set; } = 1f;
+
         // 칼 판정(Raycast, OverlapCapsule)은 이 물리 씬으로 해야 과일이 찾아집니다
         public PhysicsScene FruitPhysics { get; private set; }
 
@@ -34,9 +37,10 @@ namespace TimeSlasher
 
         private void FixedUpdate()
         {
-            // 3. 과일 세계를 "실제 시간 × 배율"만큼만 진행합니다 (평소 1배, 슬로우 0.25배)
+            // 3. 과일 세계를 "실제 시간 × 기본 빠르기 × 슬로우 배율"만큼만 진행합니다
+            //    (기본 빠르기는 0.75 → 1로 점점 빨라짐, 슬로우는 평소 1배, 블레이드 타임 0.25배)
             //    이 씬은 Unity가 자동으로 진행시키지 않아서, 여기서 불러야만 시간이 흐릅니다
-            FruitPhysics.Simulate(Time.fixedDeltaTime * BladeTimeController.Instance.Scale);
+            FruitPhysics.Simulate(Time.fixedDeltaTime * Speed * BladeTimeController.Instance.Scale);
         }
     }
 }

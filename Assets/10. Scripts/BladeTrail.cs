@@ -62,10 +62,10 @@ namespace TimeSlasher
             // 1. 지금 칼날 위치 기록
             basePoints.Add(blade.bladeBase.position);
             tipPoints.Add(blade.bladeTip.position);
-            times.Add(Time.time);
+            times.Add(Time.unscaledTime);   // 일시정지(timeScale 0) 중에도 잔상이 사라지게 실제 시간 사용
 
             // 2. 오래된 기록 지우기 (맨 앞이 가장 오래됨)
-            while (times.Count > 0 && Time.time - times[0] > trailTime)
+            while (times.Count > 0 && Time.unscaledTime - times[0] > trailTime)
             {
                 basePoints.RemoveAt(0);
                 tipPoints.RemoveAt(0);
@@ -100,7 +100,7 @@ namespace TimeSlasher
 
             for (int i = 0; i < count; i++)
             {
-                float age = (Time.time - times[i]) / trailTime;   // 0 = 방금, 1 = 곧 사라짐
+                float age = (Time.unscaledTime - times[i]) / trailTime;   // 0 = 방금, 1 = 곧 사라짐
                 Color color = Color.Lerp(headColor, tailColor, age);
 
                 vertices.Add(basePoints[i]);

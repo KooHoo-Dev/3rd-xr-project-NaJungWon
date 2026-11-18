@@ -3,9 +3,6 @@ using UnityEngine.XR.Interaction.Toolkit.Inputs.Haptics;
 
 namespace TimeSlasher
 {
-    // 칼 판정 (칼 1자루당 1개, 쌍검이면 2개)
-    // 칼날에 닿은 과일과 자를 방향을 찾아서 SliceSystem에 넘기기만 합니다
-    // (진동·소리는 SliceFeedback이 정해서 Vibrate를 부름)
     public class Blade : MonoBehaviour
     {
         [Header("칼날 설정")]

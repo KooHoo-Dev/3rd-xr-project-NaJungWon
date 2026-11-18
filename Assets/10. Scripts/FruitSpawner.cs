@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace TimeSlasher
 {
-    // 과일을 어떻게 날려 보낼지
     public enum LaunchPattern
     {
         Rise,    // 가까이에서 위로 솟았다가 그대로 떨어짐
@@ -11,8 +10,6 @@ namespace TimeSlasher
         Mixed,   // Rise와 Toss 반반
     }
 
-    // 패턴마다 따로 정하는 발사 값 (Rise와 Toss가 같은 모양으로 씀)
-    // [System.Serializable]을 붙여야 인스펙터에 펼쳐서 보임
     [System.Serializable]
     public struct LaunchSettings
     {
@@ -64,6 +61,10 @@ namespace TimeSlasher
         public float rampSeconds = 90f;      // 최대 난이도까지 걸리는 시간
         public float firstDelay = 1f;        // 게임 시작 후 첫 발사까지 대기
 
+        [Header("과일이 오르내리는 속도 (1 = 원래 물리 속도, 높이·궤적은 그대로이고 빠르기만 바뀜)")]
+        public float startFruitSpeed = 0.75f; // 처음 속도 (원래의 3/4)
+        public float endFruitSpeed = 1f;      // rampSeconds가 지났을 때 속도 (원래 속도)
+
         private float playTime;
         private float timer;
 
@@ -74,14 +75,19 @@ namespace TimeSlasher
             {
                 playTime = 0f;
                 timer = firstDelay;
+                FruitWorld.Instance.Speed = startFruitSpeed;
                 return;
             }
 
             playTime += Time.deltaTime;
+            float level = Mathf.Clamp01(playTime / rampSeconds);   // 0 → 1 난이도
+
+            // 시간이 지날수록 과일이 점점 빨라짐 (과일 세계가 흐르는 빠르기를 바꿈)
+            FruitWorld.Instance.Speed = Mathf.Lerp(startFruitSpeed, endFruitSpeed, level);
+
             timer -= Time.deltaTime * BladeTimeController.Instance.Scale;   // 슬로우 중엔 발사도 느리게
             if (timer > 0f) return;
 
-            float level = Mathf.Clamp01(playTime / rampSeconds);   // 0 → 1 난이도
             timer = Mathf.Lerp(startInterval, endInterval, level);
             int count = Random.Range(1, 1 + Mathf.RoundToInt(Mathf.Lerp(1, maxCount, level)));
             for (int i = 0; i < count; i++) SpawnOne();

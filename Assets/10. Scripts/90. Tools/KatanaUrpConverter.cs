@@ -21,7 +21,7 @@ namespace TimeSlasher
     // - _MaskTex(R 금속, G 매끈함) → URP는 "R 금속, A 매끈함"을 원하므로 새 텍스처(_urp_mg.png)를 만들어 넣음
     public static class KatanaUrpConverter
     {
-        private const string MaterialFolder = "Assets/JTS_TheSamuraiSword/Materials";
+        private const string MaterialFolder = "Assets/99. External Assets/JTS_TheSamuraiSword/Materials";
         private const string OldShaderName = "JTS/CustomSword";
 
         [MenuItem("Tools/Time Slasher/Convert Katana Materials to URP")]

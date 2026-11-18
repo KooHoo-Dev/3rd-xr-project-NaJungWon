@@ -16,10 +16,6 @@ namespace TimeSlasher
         public float minGaugeToStart = 0.25f;  // 이 이상이어야 발동
         public float gaugePerFruit = 0.1f;     // 과일 첫 절단마다 게이지 충전량
 
-        [Header("연출 설정")]
-        public AudioSource bgm;                // 배경음 (슬로우 중 낮게 끌어내림)
-        public float slowBgmPitch = 0.6f;
-
         [Header("배경 어둡게 (후처리 없이 머티리얼 색만 낮춤)")]
         public Transform[] dimRoots;           // 이 오브젝트들(Stage, Props)의 자식 Renderer는 전부 어두워짐. 하늘도 같이 어두워짐
         public float dimBrightness = 0.2f;    // 블레이드 타임 중 밝기 (1 = 그대로, 0 = 새까맣게)
@@ -85,7 +81,12 @@ namespace TimeSlasher
         private void HandleCut(CutInfo info)
         {
             if (info.IsFirstCut == false || IsSlow) return;
+
+            bool wasReady = CanStart;   // 충전 전에 이미 쓸 수 있었는지
             Gauge = Mathf.Min(1f, Gauge + gaugePerFruit);
+
+            // 이번 충전으로 처음 쓸 수 있게 됐으면 알림 소리 (풍경)
+            if (wasReady == false && CanStart) SoundManager.Instance.PlayGaugeReady();
         }
 
         private void Update()
@@ -93,6 +94,7 @@ namespace TimeSlasher
             UpdateDim();   // 게임 중이 아니어도 원래 밝기로 돌아가야 하므로 맨 위에서
 
             if (GameManager.Instance.IsPlaying == false) return;
+            if (GameManager.Instance.IsPaused) return;   // 설정창으로 멈춘 동안은 버튼을 떼도 그대로 유지
 
             bool pressed = slowAction.IsPressed();
 
@@ -110,14 +112,14 @@ namespace TimeSlasher
         {
             IsSlow = true;
             Scale = slowScale;
-            if (bgm != null) bgm.pitch = slowBgmPitch;
+            SoundManager.Instance.StartFocus();   // 시작 소리 + BGM 먹먹하게 + 심장박동
         }
 
         private void EndSlow()
         {
             IsSlow = false;
             Scale = 1f;
-            if (bgm != null) bgm.pitch = 1f;
+            SoundManager.Instance.EndFocus();     // 끝 소리(시시오도시) + BGM 원래대로
             Gauge = Mathf.Max(0f, Gauge);
 
             // 슬로우 동안 벤 과일을 한 번에 갈라지게 함 → 자르는 건 SliceSystem 담당

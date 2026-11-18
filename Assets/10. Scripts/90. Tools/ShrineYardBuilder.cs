@@ -23,12 +23,15 @@ namespace TimeSlasher
     // 4) 배경을 Stages 아래에 만들어서 블레이드 타임 중 같이 어두워지게 함
     //    (Suburb 셰이더의 _Tint·_TopColor·_BotColor는 BladeTimeController가 처리)
     // 5) 사과(빨강)와 색이 겹치지 않게: 정면에는 회색 돌 토리이, 붉은 토리이는 등 뒤 입구, 가을 주황 나무는 안 씀
+    // 6) 본전(SM_building_traditional_01)은 벽이 바깥쪽 면만 있어서 문틈으로 안을 보면 뒤의 돌담이 그대로 보임
+    //    → 벽 안쪽에 "안쪽 면만 그리는 상자"(어두운 나무색)와 마루 판을 끼워 실제 신사처럼 어두운 실내로 보이게 함
+    //    → 이미 만든 마당에는 "4. Build Hall Interior"로 실내만 추가
     //
     // 만드는 구조 (플레이어 원점, +Z가 정면)
     // Floor     머티리얼만 흙 바닥(M_ShrineGround)으로 바꿈 (Clear하면 원래대로)
     // Shrine Yard
     //  ├ Ground  참배길: 가운데 광장(3x3 타일) + 앞(본전까지)·뒤(입구까지) 길
-    //  ├ Front   돌 토리이(9m), 본전(13m), 석등 2개
+    //  ├ Front   돌 토리이(9m), 본전(13m) + Hall Interior(실내 상자·마루), 석등 2개
     //  ├ Left    바위 테두리 연못(왼쪽 앞) + 붉은 다리 + 풀
     //  ├ Right   벚나무 2그루, 덤불
     //  ├ Back    붉은 토리이 (등 뒤 6m, 입구)
@@ -58,27 +61,27 @@ namespace TimeSlasher
 
 #if UNITY_EDITOR
         // 쓰는 프리팹 (경로가 바뀌면 여기만 고치면 됨)
-        private const string StoneToriiPath = "Assets/Anime Tokyo/Prefabs/Buildings/SM_toorigate_stone.prefab";
-        private const string ShrineHallPath = "Assets/Anime Tokyo/Prefabs/Buildings/SM_building_traditional_01.prefab";
-        private const string StoneLanternPath = "Assets/Anime Tokyo/Prefabs/Props Modular/SM_lantern_traditional_01.prefab";
-        private const string WallPath = "Assets/Anime Tokyo/Prefabs/Props Modular/SM_wall_stoneblocks_01.prefab";
-        private const string BigTreePath = "Assets/Anime Tokyo/Prefabs/Nature/SM_tree_large.prefab";
-        private const string RedToriiPath = "Assets/AnimeSuburbCity/Prefabs/Park/SM_ToriiGate.prefab";
-        private const string BridgePath = "Assets/AnimeSuburbCity/Prefabs/Park/SM_ParkBridge.prefab";
-        private const string RipplePath = "Assets/AnimeSuburbCity/Prefabs/SM_WaterRipples.prefab";
-        private const string PavementPath = "Assets/AnimeSuburbCity/Prefabs/Park/SM_Pavement.prefab";
-        private const string GrassPath = "Assets/AnimeSuburbCity/Prefabs/Vegetation/SM_Grass.prefab";
-        private const string GroundTexPath = "Assets/AnimeSuburbCity/Textures/T_Dirt_A.TGA";
-        private const string BenchPath = "Assets/AnimeSuburbCity/Prefabs/Shop/SM_Bench.prefab";
-        private const string FlowerBedPath = "Assets/AnimeSuburbCity/Prefabs/Props/SM_FlowerBed.prefab";
-        private const string PetalsPath1 = "Assets/Anime Tokyo/Prefabs/Nature/SM_leaves_ground_01.prefab";   // 분홍 꽃잎 더미 (M_leaf)
-        private const string PetalsPath2 = "Assets/Anime Tokyo/Prefabs/Nature/SM_leaves_ground_02.prefab";
-        private const string PetalsPath3 = "Assets/Anime Tokyo/Prefabs/Nature/SM_leaves_ground_03.prefab";
-        private const string Stone1Path = "Assets/AnimeSuburbCity/Prefabs/Park/SM_Stone_1.prefab";
-        private const string Stone2Path = "Assets/AnimeSuburbCity/Prefabs/Park/SM_Stone_2.prefab";
-        private const string SakuraPath = "Assets/AnimeSuburbCity/Prefabs/Vegetation/SM_tree02.prefab";   // 잎이 TreeLeaves02(분홍)
-        private const string BushPath = "Assets/AnimeSuburbCity/Prefabs/Vegetation/SM_Bush01.prefab";
-        private const string SkyPath = "Assets/Anime Tokyo/Materials/Skybox Materials/Skybox Daylight.mat";
+        private const string StoneToriiPath = "Assets/99. External Assets/Anime Tokyo/Prefabs/Buildings/SM_toorigate_stone.prefab";
+        private const string ShrineHallPath = "Assets/99. External Assets/Anime Tokyo/Prefabs/Buildings/SM_building_traditional_01.prefab";
+        private const string StoneLanternPath = "Assets/99. External Assets/Anime Tokyo/Prefabs/Props Modular/SM_lantern_traditional_01.prefab";
+        private const string WallPath = "Assets/99. External Assets/Anime Tokyo/Prefabs/Props Modular/SM_wall_stoneblocks_01.prefab";
+        private const string BigTreePath = "Assets/99. External Assets/Anime Tokyo/Prefabs/Nature/SM_tree_large.prefab";
+        private const string RedToriiPath = "Assets/99. External Assets/AnimeSuburbCity/Prefabs/Park/SM_ToriiGate.prefab";
+        private const string BridgePath = "Assets/99. External Assets/AnimeSuburbCity/Prefabs/Park/SM_ParkBridge.prefab";
+        private const string RipplePath = "Assets/99. External Assets/AnimeSuburbCity/Prefabs/SM_WaterRipples.prefab";
+        private const string PavementPath = "Assets/99. External Assets/AnimeSuburbCity/Prefabs/Park/SM_Pavement.prefab";
+        private const string GrassPath = "Assets/99. External Assets/AnimeSuburbCity/Prefabs/Vegetation/SM_Grass.prefab";
+        private const string GroundTexPath = "Assets/99. External Assets/AnimeSuburbCity/Textures/T_Dirt_A.TGA";
+        private const string BenchPath = "Assets/99. External Assets/AnimeSuburbCity/Prefabs/Shop/SM_Bench.prefab";
+        private const string FlowerBedPath = "Assets/99. External Assets/AnimeSuburbCity/Prefabs/Props/SM_FlowerBed.prefab";
+        private const string PetalsPath1 = "Assets/99. External Assets/Anime Tokyo/Prefabs/Nature/SM_leaves_ground_01.prefab";   // 분홍 꽃잎 더미 (M_leaf)
+        private const string PetalsPath2 = "Assets/99. External Assets/Anime Tokyo/Prefabs/Nature/SM_leaves_ground_02.prefab";
+        private const string PetalsPath3 = "Assets/99. External Assets/Anime Tokyo/Prefabs/Nature/SM_leaves_ground_03.prefab";
+        private const string Stone1Path = "Assets/99. External Assets/AnimeSuburbCity/Prefabs/Park/SM_Stone_1.prefab";
+        private const string Stone2Path = "Assets/99. External Assets/AnimeSuburbCity/Prefabs/Park/SM_Stone_2.prefab";
+        private const string SakuraPath = "Assets/99. External Assets/AnimeSuburbCity/Prefabs/Vegetation/SM_tree02.prefab";   // 잎이 TreeLeaves02(분홍)
+        private const string BushPath = "Assets/99. External Assets/AnimeSuburbCity/Prefabs/Vegetation/SM_Bush01.prefab";
+        private const string SkyPath = "Assets/99. External Assets/Anime Tokyo/Materials/Skybox Materials/Skybox Daylight.mat";
 
         // 연못용 단순한 물 머티리얼 (없으면 처음 한 번 만들어 저장)
         private const string PondMatPath = "Assets/00. SlashTime/Material/M_ShrinePond.mat";
@@ -87,6 +90,12 @@ namespace TimeSlasher
         // 흙 바닥 머티리얼 (T_Dirt_A를 반복해서 깖)
         private const string GroundMatPath = "Assets/00. SlashTime/Material/M_ShrineGround.mat";
         private static readonly Color GroundTint = new Color(0.78f, 0.74f, 0.68f);   // 살짝 어둡게 → 과즙·조각이 잘 보임
+
+        // 본전 실내 머티리얼 (URP Unlit, 없으면 처음 한 번 만들어 저장)
+        private const string InteriorMatPath = "Assets/00. SlashTime/Material/M_ShrineInterior.mat";
+        private const string InteriorFloorMatPath = "Assets/00. SlashTime/Material/M_ShrineInteriorFloor.mat";
+        private static readonly Color InteriorColor = new Color(0.13f, 0.09f, 0.07f);        // 그늘진 나무 벽·천장
+        private static readonly Color InteriorFloorColor = new Color(0.32f, 0.25f, 0.17f);   // 마루 (벽보다 밝게 → 깊이감)
 
         [ContextMenu("1. Build Shrine Yard")]
         public void BuildYard()
@@ -224,13 +233,137 @@ namespace TimeSlasher
 
         #endregion
 
+        // 이미 만든 마당의 본전에 실내만 추가 (다시 누르면 지우고 새로 만듦)
+        [ContextMenu("4. Build Hall Interior")]
+        public void BuildHallInteriorMenu()
+        {
+            Transform parent = GetStageRoot();
+            Transform front = parent != null ? parent.Find(RootName + "/Front") : null;
+            if (front == null)
+            {
+                Debug.LogWarning($"[ShrineYardBuilder] '{RootName}/Front'가 없습니다. 먼저 1. Build Shrine Yard를 하세요.");
+                return;
+            }
+
+            // 본전 찾기 (프리팹 이름으로 시작하는 자식)
+            GameObject hall = null;
+            foreach (Transform child in front)
+            {
+                if (child.name.StartsWith("SM_building_traditional_01")) hall = child.gameObject;
+            }
+            if (hall == null)
+            {
+                Debug.LogWarning("[ShrineYardBuilder] Front 아래에서 본전을 찾지 못했습니다.");
+                return;
+            }
+
+            Transform old = front.Find("Hall Interior");
+            if (old != null) Undo.DestroyObjectImmediate(old.gameObject);
+
+            BuildHallInterior(front, hall);
+            EditorSceneManager.MarkSceneDirty(gameObject.scene);
+            Debug.Log("[ShrineYardBuilder] 본전 실내를 만들었습니다.");
+        }
+
+        #region 본전 실내
+
+        // 본전 모델 원본 치수 (모델 파일 단위, 높이 = 원본 Z)
+        // 전체: 높이 -1.4 ~ 358.7, 앞뒤 -149.5 ~ 149.5 (계단 쪽이 앞)
+        // 벽: 좌우 -100 ~ 90, 앞(문) -94 ~ 뒤 104, 마루 높이 34, 문 위 가로대 130
+        // → 벽 안쪽에 조금 들여서 상자를 둠 (좌우는 어느 쪽이 +인지 상관없게 ±85로 대칭)
+        private const float HallRawHeight = 360.1f;
+        private const float HallRawBottom = -1.4f;
+        private const float InteriorHalfWidth = 85f;
+        private const float InteriorFront = -91f;     // 문 바로 안쪽
+        private const float InteriorBack = 101f;      // 뒷벽 바로 안쪽
+        private const float InteriorFloor = 34f;      // 마루 높이
+        private const float InteriorTop = 128f;       // 가로대 바로 아래
+
+        // [수학] AI 작성
+        // 본전의 실제 크기(Bounds)로 원본 1단위가 몇 m인지 구해서, 원본 치수를 월드 위치로 바꿔 실내 상자와 마루를 놓음
+        // (본전을 Y축으로만 돌려 놓았고, 정면(계단)이 플레이어 쪽 -Z를 본다는 전제)
+        private void BuildHallInterior(Transform group, GameObject hall)
+        {
+            Bounds b = GetBounds(hall);
+            float unit = b.size.y / HallRawHeight;   // 원본 1단위 → m
+
+            Transform interior = CreateGroup("Hall Interior", group);
+
+            // 원본 높이 h → 월드 y
+            float floorY = b.min.y + (InteriorFloor - HallRawBottom) * unit;
+            float topY = b.min.y + (InteriorTop - HallRawBottom) * unit;
+
+            float width = InteriorHalfWidth * 2f * unit;
+            float depth = (InteriorBack - InteriorFront) * unit;
+            float height = topY - floorY;
+            float centerZ = b.center.z + (InteriorFront + InteriorBack) * 0.5f * unit;   // 앞(-Z)이 문 쪽
+
+            // 1) 안쪽 면만 그리는 상자 (밖에서 보면 앞면은 안 그려지고, 문틈으로 뒷벽·천장 안쪽이 보임)
+            GameObject box = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            box.name = "InteriorBox";
+            Undo.RegisterCreatedObjectUndo(box, "Build Hall Interior");
+            box.transform.SetParent(interior, true);
+            box.transform.position = new Vector3(b.center.x, floorY + height * 0.5f, centerZ);
+            box.transform.rotation = Quaternion.identity;
+            box.transform.localScale = new Vector3(width, height, depth);
+            box.GetComponent<Renderer>().sharedMaterial = GetInteriorMaterial(InteriorMatPath, InteriorColor, true);
+
+            // 2) 마루 판 (벽보다 밝은 나무색, 위를 보게 눕힌 Quad)
+            GameObject floor = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            floor.name = "InteriorFloor";
+            Undo.RegisterCreatedObjectUndo(floor, "Build Hall Interior");
+            floor.transform.SetParent(interior, true);
+            floor.transform.position = new Vector3(b.center.x, floorY + 0.01f, centerZ);
+            floor.transform.rotation = Quaternion.Euler(90f, 0f, 0f);   // Quad 앞면이 위를 봄
+            floor.transform.localScale = new Vector3(width * 0.98f, depth * 0.98f, 1f);
+            floor.GetComponent<Renderer>().sharedMaterial = GetInteriorMaterial(InteriorFloorMatPath, InteriorFloorColor, false);
+
+            // 그림자는 필요 없음 (실내라 어둡게 칠한 색으로 충분, Quest 부담 줄이기)
+            foreach (Renderer r in interior.GetComponentsInChildren<Renderer>())
+            {
+                r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                r.receiveShadows = false;
+            }
+
+            // 콜라이더 제거 (Cube·Quad에 기본으로 붙어 있음)
+            RemoveColliders(interior);
+
+            // 마당의 다른 배경처럼 Static
+            foreach (Transform t in interior.GetComponentsInChildren<Transform>(true))
+            {
+                GameObjectUtility.SetStaticEditorFlags(t.gameObject,
+                    StaticEditorFlags.ContributeGI | StaticEditorFlags.BatchingStatic);
+            }
+        }
+
+        // 실내용 URP Unlit 머티리얼 (빛 계산 없이 색만 → 가볍고, 블레이드 타임 때 _BaseColor로 같이 어두워짐)
+        // insideOnly = true면 안쪽 면만 그림 (Cull Front)
+        private static Material GetInteriorMaterial(string path, Color color, bool insideOnly)
+        {
+            Material mat = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (mat != null) return mat;
+
+            Shader unlit = Shader.Find("Universal Render Pipeline/Unlit");
+            if (unlit == null) return null;
+
+            mat = new Material(unlit);
+            mat.SetColor("_BaseColor", color);
+            if (insideOnly) mat.SetFloat("_Cull", (float)UnityEngine.Rendering.CullMode.Front);
+            AssetDatabase.CreateAsset(mat, path);
+            AssetDatabase.SaveAssets();
+            return mat;
+        }
+
+        #endregion
+
         #region 구역별 배치
 
         // 정면: 회색 돌 토리이 → 그 뒤 본전, 양옆 석등
         private void BuildFront(Transform group)
         {
             Place(StoneToriiPath, group, new Vector3(0f, 0f, 9f), 0f, 4.5f, 0f);
-            Place(ShrineHallPath, group, new Vector3(0f, 0f, 12.5f), 180f, 0f, 9f);    // 정면이 플레이어를 보게
+            GameObject hall = Place(ShrineHallPath, group, new Vector3(0f, 0f, 12.5f), 180f, 0f, 9f);    // 정면이 플레이어를 보게
+            if (hall != null) BuildHallInterior(group, hall);
             Place(StoneLanternPath, group, new Vector3(-2.6f, 0f, 8.5f), 0f, 1.8f, 0f);
             Place(StoneLanternPath, group, new Vector3(2.6f, 0f, 8.5f), 0f, 1.8f, 0f);
         }
