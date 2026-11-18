@@ -32,10 +32,11 @@ namespace TimeSlasher
         public Transform player;
         public float launchY = -0.5f;        // 바닥 아래 발사 높이 (큰 과일도 바닥 위로 안 삐져나오게)
 
+        // 거리 값은 긴 검(날 0.71m, 손에서 칼끝까지) 기준. 쌍검이면 dualDistanceScale을 곱함
         [Header("Rise: 가까이에서 수직으로 올라갔다 떨어짐")]
         public LaunchSettings rise = new LaunchSettings
         {
-            MinDistance = 0.6f, MaxDistance = 1.0f,
+            MinDistance = 0.5f, MaxDistance = 0.85f,   // 팔을 뻗었을 때 칼 가운데~끝이 닿는 거리
             MinApexY = 1.3f, MaxApexY = 1.8f,          // 가슴 ~ 머리 위 살짝 (고개를 많이 안 들게)
             MinSideAngle = -35f, MaxSideAngle = 35f,
         };
@@ -49,9 +50,12 @@ namespace TimeSlasher
         };
 
         [Header("타격 존 (Toss의 최고점이 생기는 곳, 칼이 닿는 곳)")]
-        public float hitZoneMinDistance = 0.6f;   // 플레이어 앞 거리 (쌍검 0.55m도 닿게)
-        public float hitZoneMaxDistance = 1.0f;
-        public float hitZoneHalfWidth = 0.5f;     // 좌우 폭의 절반
+        public float hitZoneMinDistance = 0.5f;   // 플레이어 앞 거리 (긴 검 기준)
+        public float hitZoneMaxDistance = 0.85f;
+        public float hitZoneHalfWidth = 0.45f;    // 좌우 폭의 절반
+
+        [Header("쌍검 거리 배율 (쌍검 날 0.48m라 덜 닿음)")]
+        public float dualDistanceScale = 0.8f;    // Rise 거리·타격 존 거리·폭에 곱함 (팔 길이 포함 리치 비율 ≈ 0.8)
 
         [Header("난이도")]
         public float startInterval = 2.0f;   // 처음 발사 간격
@@ -95,19 +99,21 @@ namespace TimeSlasher
             if (now == LaunchPattern.Mixed) now = Random.value < 0.5f ? LaunchPattern.Rise : LaunchPattern.Toss;
 
             // 3. 패턴마다 출발 위치와 최고점 정하기
+            //    칼이 닿는 거리는 무기마다 다르므로 쌍검이면 가까이 생성
+            float reach = GameManager.Instance.Weapon == WeaponType.DualSwords ? dualDistanceScale : 1f;
             Vector3 pos;
             Vector3 apex;
             if (now == LaunchPattern.Rise)
             {
                 // 가까이에서 수직으로: 최고점은 출발점 바로 위
-                pos = GetLaunchPosition(rise);
+                pos = GetLaunchPosition(rise, reach);
                 apex = new Vector3(pos.x, Random.Range(rise.MinApexY, rise.MaxApexY), pos.z);
             }
             else
             {
-                // 멀리서 플레이어 쪽으로: 최고점은 타격 존 안
-                pos = GetLaunchPosition(toss);
-                apex = GetHitZonePosition(Random.Range(toss.MinApexY, toss.MaxApexY));
+                // 멀리서 플레이어 쪽으로: 최고점은 타격 존 안 (출발 거리는 멀어서 무기와 상관없음)
+                pos = GetLaunchPosition(toss, 1f);
+                apex = GetHitZonePosition(Random.Range(toss.MinApexY, toss.MaxApexY), reach);
             }
             Vector3 velocity = GetVelocityToApex(pos, apex);
 
@@ -127,24 +133,24 @@ namespace TimeSlasher
         }
 
         // [수학] AI 작성
-        // 플레이어 정면 기준 거리(Min~MaxDistance)·좌우 각도(Min~MaxSideAngle) 랜덤 위치. 높이는 바닥 아래(launchY)
-        private Vector3 GetLaunchPosition(LaunchSettings settings)
+        // 플레이어 정면 기준 거리(Min~MaxDistance × reach)·좌우 각도(Min~MaxSideAngle) 랜덤 위치. 높이는 바닥 아래(launchY)
+        private Vector3 GetLaunchPosition(LaunchSettings settings, float reach)
         {
             float angle = Random.Range(settings.MinSideAngle, settings.MaxSideAngle);
             Vector3 dir = Quaternion.Euler(0f, angle, 0f) * Forward();
-            Vector3 pos = player.position + dir * Random.Range(settings.MinDistance, settings.MaxDistance);
+            Vector3 pos = player.position + dir * Random.Range(settings.MinDistance, settings.MaxDistance) * reach;
             pos.y = launchY;
             return pos;
         }
 
         // [수학] AI 작성
-        // 타격 존 안의 랜덤한 점: 플레이어 앞 거리·좌우는 랜덤, 높이는 y
-        private Vector3 GetHitZonePosition(float y)
+        // 타격 존 안의 랜덤한 점: 플레이어 앞 거리·좌우는 랜덤(× reach), 높이는 y
+        private Vector3 GetHitZonePosition(float y, float reach)
         {
             Vector3 right = Vector3.Cross(Vector3.up, Forward());
             Vector3 pos = player.position
-                          + Forward() * Random.Range(hitZoneMinDistance, hitZoneMaxDistance)
-                          + right * Random.Range(-hitZoneHalfWidth, hitZoneHalfWidth);
+                          + Forward() * Random.Range(hitZoneMinDistance, hitZoneMaxDistance) * reach
+                          + right * Random.Range(-hitZoneHalfWidth, hitZoneHalfWidth) * reach;
             pos.y = y;
             return pos;
         }

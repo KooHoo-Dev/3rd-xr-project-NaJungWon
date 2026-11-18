@@ -130,3 +130,6 @@ desktop.ini
 /[Aa]ssets/UModelerX-Hub/
 /[Aa]ssets/UModelerX-Hub.meta
 /UModelerXPackages/
+
+# 에셋 패키지 원본 압축 파일은 올리지 않음
+*.rar

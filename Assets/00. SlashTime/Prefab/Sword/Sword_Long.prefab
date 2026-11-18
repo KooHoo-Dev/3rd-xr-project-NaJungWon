@@ -25,11 +25,11 @@ Transform:
   m_GameObject: {fileID: 2674466733476285132}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071069, y: -0, z: -0, w: 0.70710677}
-  m_LocalPosition: {x: 0, y: 0.15, z: -0.35}
+  m_LocalPosition: {x: 0, y: -0.0022248807, z: 0.011960338}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2656528533306678021}
+  m_Father: {fileID: 6211872789129410772}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3492202914796569252
 GameObject:
@@ -56,11 +56,11 @@ Transform:
   m_GameObject: {fileID: 3492202914796569252}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071069, y: -0, z: -0, w: 0.70710677}
-  m_LocalPosition: {x: 0, y: 0.15, z: 0.65}
+  m_LocalPosition: {x: 0, y: 0.07711017, z: 0.70913965}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2656528533306678021}
+  m_Father: {fileID: 6211872789129410772}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3892301736784037517
 GameObject:
@@ -71,9 +71,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2656528533306678021}
-  - component: {fileID: 6639013855822046346}
-  - component: {fileID: 912056084689896334}
-  - component: {fileID: 8635954023776270120}
+  - component: {fileID: 8948643390678420382}
   m_Layer: 0
   m_Name: Sword_Long
   m_TagString: Untagged
@@ -89,30 +87,84 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3892301736784037517}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.17364825, y: 0, z: 0, w: 0.9848078}
-  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6211872789129410772}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8948643390678420382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3892301736784037517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63a4e40da7c5c1142ae1565cec7dea39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TimeSlasher.Blade
+  bladeBase: {fileID: 4828181324563495274}
+  bladeTip: {fileID: 2803818412282894115}
+  bladeRadius: 0.02
+  fruitMask:
+    serializedVersion: 2
+    m_Bits: 256
+  haptic: {fileID: 0}
+  drawDebug: 1
+--- !u!1 &6035595621852526576
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6211872789129410772}
+  - component: {fileID: 1084316927218032934}
+  - component: {fileID: 7495683598683061960}
+  m_Layer: 0
+  m_Name: Sword
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6211872789129410772
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6035595621852526576}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4828181324563495274}
   - {fileID: 2803818412282894115}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: -20, y: 0, z: 0}
---- !u!33 &6639013855822046346
+  m_Father: {fileID: 2656528533306678021}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &1084316927218032934
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3892301736784037517}
-  m_Mesh: {fileID: 9120475714758841765, guid: 7e75f120252c19b47a0e3d890385a4c6, type: 3}
---- !u!23 &912056084689896334
+  m_GameObject: {fileID: 6035595621852526576}
+  m_Mesh: {fileID: 4300002, guid: fee89d1cc9b692945a2e9c0a862467b7, type: 3}
+--- !u!23 &7495683598683061960
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3892301736784037517}
+  m_GameObject: {fileID: 6035595621852526576}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -131,7 +183,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 48923e3e92f83d04e83c6dd76d95c89b, type: 2}
+  - {fileID: 2100000, guid: 4866ca68028eb0f4fb7432808b29a3da, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -155,23 +207,3 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &8635954023776270120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3892301736784037517}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63a4e40da7c5c1142ae1565cec7dea39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TimeSlasher.Blade
-  bladeBase: {fileID: 4828181324563495274}
-  bladeTip: {fileID: 2803818412282894115}
-  bladeRadius: 0.02
-  fruitMask:
-    serializedVersion: 2
-    m_Bits: 256
-  haptic: {fileID: 0}
-  drawDebug: 1

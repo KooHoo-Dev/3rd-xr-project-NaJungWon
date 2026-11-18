@@ -35,7 +35,13 @@ namespace TimeSlasher
 
         private InputAction slowAction;
 
+        // 셰이더마다 색 이름이 달라서, 이 이름들 중 머티리얼에 있는 것을 전부 어둡게 함
+        // _BaseColor: URP Lit (Anime Tokyo 등) / _Color: 옛 셰이더 / _Tint: AnimeSuburbCity 건물·소품
+        // _TopColor, _BotColor: AnimeSuburbCity 나뭇잎
+        private static readonly string[] DimColorNames = { "_BaseColor", "_Color", "_Tint", "_TopColor", "_BotColor" };
+
         private List<Material> dimMaterials = new List<Material>();   // 어둡게 할 머티리얼 (복사본)
+        private List<int> dimColorIds = new List<int>();              // 그 머티리얼에서 바꿀 색 이름 (번호)
         private List<Color> dimColors = new List<Color>();            // 원래 색
         private Material skyMaterial;     // 하늘 머티리얼 (복사본)
         private float skyExposure;        // 원래 하늘 밝기
@@ -157,8 +163,15 @@ namespace TimeSlasher
             // renderer.materials는 이 물체 전용 복사본을 만들어 줌 → 원본 머티리얼 파일은 안 바뀜
             foreach (Material m in r.materials)
             {
-                dimMaterials.Add(m);
-                dimColors.Add(m.color);   // URP Lit의 Base Color
+                // 이 머티리얼에 있는 색 이름만 골라서 기억 (없는 이름으로 m.color를 쓰면 에러가 남)
+                foreach (string colorName in DimColorNames)
+                {
+                    if (m.HasProperty(colorName) == false) continue;
+                    int id = Shader.PropertyToID(colorName);
+                    dimMaterials.Add(m);
+                    dimColorIds.Add(id);
+                    dimColors.Add(m.GetColor(id));
+                }
             }
         }
 
@@ -175,7 +188,7 @@ namespace TimeSlasher
             {
                 Color c = dimColors[i] * brightness;
                 c.a = dimColors[i].a;   // 투명도는 그대로
-                dimMaterials[i].color = c;
+                dimMaterials[i].SetColor(dimColorIds[i], c);
             }
 
             if (skyMaterial != null)
