@@ -14,6 +14,7 @@ namespace TimeSlasher
 
         [Header("규칙")]
         public int maxLives = 3;
+        public float missInvincibleSeconds = 0.5f;   // 목숨이 깎인 뒤 이 시간 동안은 또 안 깎임 (여러 개가 한꺼번에 떨어져도 한 번에 다 잃지 않게)
 
         [Header("무기 (컨트롤러 자식으로 붙여둔 칼)")]
         public GameObject[] longSwordObjects;    // 한손검을 골랐을 때 켤 것 (오른손 긴 칼)
@@ -27,6 +28,8 @@ namespace TimeSlasher
         public WeaponType Weapon { get; private set; } = WeaponType.LongSword;
         public int Lives { get; private set; }
         public bool IsPaused { get; private set; }   // 설정창이 열려 게임이 멈춘 상태
+
+        private float invincibleUntil;   // 이 시각(Time.time)까지는 목숨이 안 깎임
 
         private void Awake()
         {
@@ -76,6 +79,7 @@ namespace TimeSlasher
             if (IsPlaying) return;
 
             Lives = maxLives;
+            invincibleUntil = 0f;
             ScoreSystem.Instance.ResetScore();
             SliceSystem.Instance.ClearReserved();
             BladeTimeController.Instance.ResetGauge();
@@ -89,8 +93,10 @@ namespace TimeSlasher
         public void OnMiss()
         {
             if (IsPlaying == false) return;
+            if (Time.time < invincibleUntil) return;   // 무적 시간 중이면 무시 (콤보도 그대로)
 
             Lives--;
+            invincibleUntil = Time.time + missInvincibleSeconds;
             ScoreSystem.Instance.ResetCombo();
             SoundManager.Instance.PlayMiss();
             if (Lives <= 0) GameOver();

@@ -1215,7 +1215,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8135023674665499069, guid: 58d0a4ac86f2348deb02f3880c71378e, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8518324294302271954, guid: 58d0a4ac86f2348deb02f3880c71378e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10018,6 +10018,8 @@ MonoBehaviour:
   maxCount: 4
   rampSeconds: 90
   firstDelay: 1
+  startFruitSpeed: 0.75
+  endFruitSpeed: 1
 --- !u!1 &1114446091
 GameObject:
   m_ObjectHideFlags: 0
